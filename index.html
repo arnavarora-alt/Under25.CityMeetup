@@ -94,7 +94,7 @@ input,select{width:100%;padding:14px;border-radius:12px;border:2px solid var(--k
 <div class="row"><img class="sm" data-ic="r3c2" alt=""></div>
 <h2>Now, build your ID card</h2>
 <p>You get a personal ID card at the venue. Add a childhood photo and tell people what to ask you about.</p>
-<label for="pf">Your childhood photo (you also upload it in the form)</label><input id="pf" type="file" accept="image/*">
+<label for="pf">Your childhood photo</label><input id="pf" type="file" accept="image/*">
 <img id="pv" alt="Your photo" hidden style="width:96px;height:96px;object-fit:cover;border-radius:12px;border:2px solid #000;margin-bottom:16px">
 <label for="ab">Your 'Ask me about' line</label><input id="ab" maxlength="40" placeholder="For example: street food in Bangalore">
 <p class="err" id="e2"></p>
@@ -157,7 +157,10 @@ input,select{width:100%;padding:14px;border-radius:12px;border:2px solid var(--k
 </div>
 <div class="card">
 <p><strong>One last step</strong></p>
-<p>Confirm your spot in the form. You will add your childhood photo and your 'Ask me about' line for your ID card.</p>
+<p id="cft">Confirm your spot to lock in your invite and your ID card.</p>
+<p class="mut" style="font-size:14px">By confirming, you agree that Under25 can use your details and photo to organise the meetup and print your ID card.</p>
+<button class="btn" id="cf2">Confirm my spot</button>
+<p class="err" id="e3"></p>
 <a class="btn" id="cf" target="_blank" rel="noopener" href="#">Confirm my spot</a>
 <button class="btn alt" id="cp">Copy my details</button>
 </div>
@@ -239,7 +242,7 @@ function formUrl(){
   return FORM+"?"+p;
 }
 $("#cp").onclick=async()=>{
-  const t=`Name: ${S.name}\nEmail: ${S.email}\nPhone: ${S.phone}\nCollege: ${S.college}\nDOB: ${S.dob}\nArea: ${S.area}\nHouse: ${H[S.house].n}\nInterest room: ${ROOM[S.hobby]}\nTalent: ${S.talent||"None"}`;
+  const t=`Name: ${S.name}\nEmail: ${S.email}\nPhone: ${S.phone}\nCollege: ${S.college}\nDOB: ${S.dob}\nArea: ${S.area}\nHouse: ${H[S.house].n}\nInterest room: ${ROOM[S.hobby]}\nAsk me about: ${S.ask}\nTalent: ${S.talent||"None"}`;
   try{await navigator.clipboard.writeText(t);$("#cp").textContent="Copied"}catch(e){$("#cp").textContent="Copy not available, note your details"}
 };
 
@@ -252,7 +255,7 @@ const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","De
 const fmt=d=>{const[y,m,dd]=d.split("-");return `${+dd} ${MON[+m-1]} ${y}`};
 const rr=(x,X,Y,W,Hh,R)=>{x.beginPath();x.roundRect?x.roundRect(X,Y,W,Hh,R):x.rect(X,Y,W,Hh)};
 $("#pf").onchange=e=>{const f=e.target.files[0];if(!f)return;const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{S.photo=im;$("#pv").src=fr.result;$("#pv").hidden=false};im.src=fr.result};fr.readAsDataURL(f)};
-$("#toSort").onclick=()=>{S.ask=$("#ab").value.trim();if(!S.ask){$("#e2").textContent="Add your 'Ask me about' line to continue.";return}sortIt()};
+$("#toSort").onclick=()=>{S.ask=$("#ab").value.trim();if(!S.ask||!S.photo){$("#e2").textContent="Add a photo and your 'Ask me about' line to continue.";return}sortIt()};
 
 function card(cv,p,edit){
   const x=cv.getContext("2d"),h=H[S.house],bg=S.bg||h.b,fg=TXT[bg]||"#000",a=i=>Math.max(0,Math.min(1,p-i));
@@ -325,6 +328,17 @@ function tick(){const n=new Date(),d=T0-n,c=$("#cd");
   const s=Math.floor(d/1000),v=[Math.floor(s/86400),Math.floor(s%86400/3600),Math.floor(s%3600/60),s%60];
   c.className="cd";c.innerHTML=["days","hours","min","sec"].map((l,i)=>`<div>${String(v[i]).padStart(2,"0")}<small>${l}</small></div>`).join("")}
 tick();setInterval(tick,1000);
+
+/* ---- Submit to Google Sheet via Apps Script ---- */
+const SUBMIT_URL="https://script.google.com/macros/s/AKfycbx-SFy7oPQUEJOnLzY-ZFXeFyTuabaG9UGw5II0opnlZfIwEydpdoxwx4lJsOE-BcDFsg/exec"; /* paste your Apps Script web app URL (ends in /exec) here */
+$("#cf").hidden=!!SUBMIT_URL;$("#cf2").hidden=!SUBMIT_URL;
+function photoData(){const im=S.photo,s=Math.min(1,900/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext("2d").drawImage(im,0,0,c.width,c.height);return c.toDataURL("image/jpeg",.82)}
+$("#cf2").onclick=async()=>{
+  const b=$("#cf2");b.disabled=true;b.textContent="Confirming...";$("#e3").textContent="";
+  const d={name:S.name,email:S.email,phone:S.phone,college:S.college,dob:S.dob,area:S.area,house:H[S.house].n,room:ROOM[S.hobby],talent:S.talent,ask:S.ask,photo:photoData()};
+  try{await fetch(SUBMIT_URL,{method:"POST",mode:"no-cors",body:JSON.stringify(d)});b.textContent="You're confirmed";$("#cft").textContent="You're confirmed, "+S.name.split(" ")[0]+". See you on the 25th."}
+  catch(e){b.disabled=false;b.textContent="Confirm my spot";$("#e3").textContent="Could not send. Check your internet and try again."}
+};
 </script>
 </body>
 </html>
