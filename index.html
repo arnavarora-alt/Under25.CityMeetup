@@ -69,14 +69,14 @@ input,select{width:100%;padding:14px;border-radius:12px;border:2px solid var(--k
 <main>
 <img class="logo" data-ic="logo" alt="Under25">
 
-<section class="s on" id="welcome" data-ph="0" data-bg="y">
+<section class="s on" id="welcome" data-ph="8" data-bg="y">
 <h1>Which House will claim you?</h1>
 <p>The Under25 City Meetup is coming to Bangalore. Play this 2 minute game, get sorted into your House and unlock your personal invite.</p>
 <div class="row"><img data-ic="r2c4" alt=""><img class="sm" data-ic="r1c5" alt=""><img class="sm" data-ic="r4c3" alt=""></div>
 <button class="btn" data-go="details">Start the game</button>
 </section>
 
-<section class="s" id="details" data-ph="3" data-bg="w">
+<section class="s" id="details" data-ph="9" data-bg="w">
 <div class="row"><img class="sm" data-ic="r1c2" alt=""></div>
 <h2>First, who are you?</h2>
 <label for="n">Your name</label><input id="n" autocomplete="name">
@@ -110,7 +110,7 @@ input,select{width:100%;padding:14px;border-radius:12px;border:2px solid var(--k
 </div>
 </section>
 
-<section class="s" id="photo" data-ph="6" data-bg="w">
+<section class="s" id="photo" data-ph="7" data-bg="w">
 <div class="row"><img class="sm" data-ic="r3c2" alt=""></div>
 <h2>Now, build your ID card</h2>
 <p>You get a personal ID card at the venue. Add a childhood photo and tell people what to ask you about.</p>
@@ -139,7 +139,7 @@ input,select{width:100%;padding:14px;border-radius:12px;border:2px solid var(--k
 <button class="btn alt" id="toInv">Continue to my invite</button>
 </section>
 
-<section class="s" id="sort" data-ph="4" data-bg="w">
+<section class="s" id="sort" data-ph="10" data-bg="w">
 <div id="sg" style="text-align:center"><img class="wob" data-ic="r2c2" alt=""><h2>Sorting you...</h2></div>
 <div class="rv" id="rv" hidden>
 <p>You belong to</p>
@@ -149,7 +149,7 @@ input,select{width:100%;padding:14px;border-radius:12px;border:2px solid var(--k
 <button class="btn" id="open" hidden>Print my ID card</button>
 </section>
 
-<section class="s" id="invite" data-ph="6" data-bg="y">
+<section class="s" id="invite" data-ph="11" data-bg="y">
 <h1 id="ih"></h1>
 <div class="scr" id="scr"><div class="tk" id="tk">
 <img data-ic="r1c3" alt="">
@@ -205,7 +205,7 @@ const LINE={sports:"Expect a room that turns every icebreaker into a competition
 const H={pump:{n:"Pumpkin Patch",b:"#fe5a00",f:"#000"},phan:{n:"Phantom Manor",b:"#4d298e",f:"#fff"},brew:{n:"Witch's Brew",b:"#065939",f:"#fff"},cat:{n:"Black Cat Club",b:"#ffd12e",f:"#000"}};
 const AREA={"Koramangala":"pump","HSR Layout":"pump","BTM Layout":"pump","Bellandur":"pump","Indiranagar":"phan","Domlur":"phan","Ulsoor":"phan","Whitefield":"phan","Marathahalli":"phan","Jayanagar":"brew","JP Nagar":"brew","Banashankari":"brew","Basavanagudi":"brew","Malleshwaram":"cat","Rajajinagar":"cat","Yeshwanthpur":"cat","Hebbal":"cat","Another area in Bangalore":"cat"};
 const S={tally:{},talent:""};let qi=0;
-const QP=[1,2,5,4,0,6,3];let phc=0,phi=-1;
+const QP=[7,1,12,2,10,8,9];let phc=0,phi=-1;
 function setPh(i){if(i===phi)return;phi=i;const im=new Image();
   im.onload=()=>{if(phi!==i)return;const a=$(phc?"#ph2":"#ph1"),b=$(phc?"#ph1":"#ph2");
     a.style.backgroundImage=`linear-gradient(rgba(0,0,0,.58),rgba(0,0,0,.58)),url(bg${i}.jpg)`;
