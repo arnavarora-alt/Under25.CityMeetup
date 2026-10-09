@@ -9,13 +9,13 @@
 :root{--y:#ffd12e;--o:#fe5a00;--g:#065939;--p:#4d298e;--k:#000;--w:#fff;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *,*:before,*:after{box-sizing:inherit}
-body{margin:0;background:var(--y);color:var(--k);font:500 clamp(17px,.5vw + 14px,20px)/1.45 "Inter Tight",system-ui,sans-serif;transition:background .35s}
+body{margin:0;background:var(--y);color:#fff;font:500 clamp(17px,.5vw + 14px,20px)/1.45 "Inter Tight",system-ui,sans-serif;transition:background .35s}
 body[data-bg=w]{background:var(--w)}body[data-bg=o]{background:var(--o)}
 main{max-width:1040px;margin:0 auto;padding:clamp(20px,4vw,48px) clamp(20px,4vw,48px) 56px}
 .logo{height:clamp(46px,8vw,72px);width:auto;display:block}
-h1{font-weight:900;font-size:clamp(42px,12vw,84px);line-height:.95;letter-spacing:-.035em;margin:.4em 0 .3em}
-h2{font-weight:900;font-size:clamp(28px,7vw,48px);line-height:1;letter-spacing:-.03em;margin:.5em 0 .6em}
-p{margin:0 0 14px}.mut{color:rgba(0,0,0,.72)}
+h1{font-weight:800;text-transform:uppercase;font-size:clamp(42px,12vw,84px);line-height:.92;letter-spacing:-.035em;margin:.4em 0 .3em}
+h2{font-weight:800;text-transform:uppercase;font-size:clamp(28px,7vw,48px);line-height:.95;letter-spacing:-.03em;margin:.5em 0 .6em}
+p{margin:0 0 14px}.mut{color:rgba(255,255,255,.82)}.card .mut{color:rgba(0,0,0,.72)}body.np{color:#000}body.np .mut{color:rgba(0,0,0,.72)}
 .s{display:none}.s.on{display:block}
 .row{display:flex;align-items:center;gap:14px;margin:18px 0}
 .row img{height:clamp(96px,14vw,150px);width:auto}.row img.sm{height:clamp(64px,10vw,96px)}
@@ -34,7 +34,7 @@ input,select{width:100%;padding:14px;border-radius:12px;border:2px solid var(--k
 .tk{--hb:#fe5a00;--hf:#000;background:var(--hb);color:var(--hf);border:2px solid var(--k);border-radius:22px;padding:24px;margin:16px 0 24px;position:relative}
 .tk .big{font-weight:900;font-size:clamp(34px,10vw,48px);line-height:1;letter-spacing:-.03em;margin:10px 0}
 .tk p{margin:4px 0}.tk img{position:absolute;right:16px;top:14px;height:46px}
-.card{background:var(--w);border:2px solid var(--k);border-radius:18px;padding:18px;margin-bottom:16px}
+.card{background:var(--w);color:#000;border:2px solid var(--k);border-radius:18px;padding:18px;margin-bottom:16px}
 #wp{width:60%;max-width:220px;border-radius:14px;display:block;margin:10px 0}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 .cv{width:100%;max-width:340px;display:block;margin:12px auto;border-radius:22px}
@@ -45,8 +45,7 @@ input,select{width:100%;padding:14px;border-radius:12px;border:2px solid var(--k
 .scr{position:relative;margin:16px 0 12px}.scr .tk{margin:0}.scr canvas{position:absolute;left:0;top:0;width:100%;height:100%;border-radius:22px;touch-action:none;transition:opacity .6s}.scr canvas.gone{opacity:0;pointer-events:none}
 .cd{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center}.cd div{background:var(--y);border:2px solid #000;border-radius:12px;padding:10px 0;font-weight:900;font-size:26px;line-height:1}.cd small{display:block;font-weight:500;font-size:12px;margin-top:4px}
 .ph{position:fixed;left:0;top:0;width:100%;height:100%;z-index:-1;background-size:cover;background-position:center;opacity:0;transition:opacity .9s;pointer-events:none}
-.ph.on{opacity:.5}
-.s>h1,.s>h2,.s>p,.s>label{text-shadow:0 0 8px rgba(255,255,255,.9),0 0 20px rgba(255,255,255,.7)}
+.ph.on{opacity:1}
 @media (min-width:760px){
 #welcome,#details,#talent,#photo,#sort,#print{max-width:640px;margin-left:auto;margin-right:auto}
 #q{max-width:820px;margin-left:auto;margin-right:auto}
@@ -206,8 +205,8 @@ const H={pump:{n:"Pumpkin Patch",b:"#fe5a00",f:"#000"},phan:{n:"Phantom Manor",b
 const AREA={"Koramangala":"pump","HSR Layout":"pump","BTM Layout":"pump","Bellandur":"pump","Indiranagar":"phan","Domlur":"phan","Ulsoor":"phan","Whitefield":"phan","Marathahalli":"phan","Jayanagar":"brew","JP Nagar":"brew","Banashankari":"brew","Basavanagudi":"brew","Malleshwaram":"cat","Rajajinagar":"cat","Yeshwanthpur":"cat","Hebbal":"cat","Another area in Bangalore":"cat"};
 const S={tally:{},talent:""};let qi=0;
 const PH=window.PH||[],QP=[1,2,5,4,0,6,3];let phc=0,phi=-1;
-function setPh(i){if(!PH.length||i===phi)return;phi=i;const a=$(phc?"#ph2":"#ph1"),b=$(phc?"#ph1":"#ph2");a.style.backgroundImage=`url(${PH[i]})`;a.classList.add("on");b.classList.remove("on");phc=1-phc}
-setPh(0);
+function setPh(i){if(!PH.length||i===phi)return;phi=i;const a=$(phc?"#ph2":"#ph1"),b=$(phc?"#ph1":"#ph2");a.style.backgroundImage=`linear-gradient(rgba(0,0,0,.58),rgba(0,0,0,.58)),url(${PH[i]})`;a.classList.add("on");b.classList.remove("on");phc=1-phc}
+setPh(0);if(!PH.length)document.body.classList.add("np");
 const go=id=>{const el=$("#"+id);document.querySelectorAll(".s").forEach(e=>e.classList.toggle("on",e===el));document.body.dataset.bg=el.dataset.bg;if(el.dataset.ph)setPh(+el.dataset.ph);scrollTo(0,0)};
 document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
 $("#a").innerHTML='<option value="">Choose your area</option>'+Object.keys(AREA).map(a=>`<option>${a}</option>`).join("");
