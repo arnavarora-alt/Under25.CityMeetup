@@ -44,8 +44,10 @@ input,select{width:100%;padding:14px;border-radius:12px;border:2px solid var(--k
 .ctl{display:flex;gap:8px;margin-bottom:12px}.ctl .btn{flex:1;padding:10px;font-size:15px;margin:0}
 .scr{position:relative;margin:16px 0 12px}.scr .tk{margin:0}.scr canvas{position:absolute;left:0;top:0;width:100%;height:100%;border-radius:22px;touch-action:none;transition:opacity .6s}.scr canvas.gone{opacity:0;pointer-events:none}
 .cd{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center}.cd div{background:var(--y);border:2px solid #000;border-radius:12px;padding:10px 0;font-weight:900;font-size:26px;line-height:1}.cd small{display:block;font-weight:500;font-size:12px;margin-top:4px}
-.ph{position:fixed;left:0;top:0;width:100%;height:100%;z-index:-1;background-size:cover;background-position:center;opacity:0;transition:opacity .9s;pointer-events:none}
+.ph{position:fixed;left:0;top:0;width:118%;height:100%;z-index:-1;background-size:cover;background-position:center;opacity:0;transition:opacity .9s;pointer-events:none;will-change:transform,opacity}
 .ph.on{opacity:1}
+.ph.run{animation:phpan 80s linear forwards}
+@keyframes phpan{from{transform:translate3d(0,0,0)}to{transform:translate3d(-15.25%,0,0)}}
 @media (min-width:760px){
 #welcome,#details,#talent,#photo,#sort,#print{max-width:640px;margin-left:auto;margin-right:auto}
 #q{max-width:820px;margin-left:auto;margin-right:auto}
@@ -184,7 +186,6 @@ input,select{width:100%;padding:14px;border-radius:12px;border:2px solid var(--k
 </section>
 </main>
 
-<script src="photos.js"></script>
 <script src="icons.js"></script>
 <script>
 const IC=window.IC;
@@ -204,9 +205,13 @@ const LINE={sports:"Expect a room that turns every icebreaker into a competition
 const H={pump:{n:"Pumpkin Patch",b:"#fe5a00",f:"#000"},phan:{n:"Phantom Manor",b:"#4d298e",f:"#fff"},brew:{n:"Witch's Brew",b:"#065939",f:"#fff"},cat:{n:"Black Cat Club",b:"#ffd12e",f:"#000"}};
 const AREA={"Koramangala":"pump","HSR Layout":"pump","BTM Layout":"pump","Bellandur":"pump","Indiranagar":"phan","Domlur":"phan","Ulsoor":"phan","Whitefield":"phan","Marathahalli":"phan","Jayanagar":"brew","JP Nagar":"brew","Banashankari":"brew","Basavanagudi":"brew","Malleshwaram":"cat","Rajajinagar":"cat","Yeshwanthpur":"cat","Hebbal":"cat","Another area in Bangalore":"cat"};
 const S={tally:{},talent:""};let qi=0;
-const PH=window.PH||[],QP=[1,2,5,4,0,6,3];let phc=0,phi=-1;
-function setPh(i){if(!PH.length||i===phi)return;phi=i;const a=$(phc?"#ph2":"#ph1"),b=$(phc?"#ph1":"#ph2");a.style.backgroundImage=`linear-gradient(rgba(0,0,0,.58),rgba(0,0,0,.58)),url(${PH[i]})`;a.classList.add("on");b.classList.remove("on");phc=1-phc}
-setPh(0);if(!PH.length)document.body.classList.add("np");
+const QP=[1,2,5,4,0,6,3];let phc=0,phi=-1;
+function setPh(i){if(i===phi)return;phi=i;const im=new Image();
+  im.onload=()=>{if(phi!==i)return;const a=$(phc?"#ph2":"#ph1"),b=$(phc?"#ph1":"#ph2");
+    a.style.backgroundImage=`linear-gradient(rgba(0,0,0,.58),rgba(0,0,0,.58)),url(bg${i}.jpg)`;
+    a.classList.remove("run");void a.offsetWidth;a.classList.add("run","on");b.classList.remove("on");phc=1-phc;document.body.classList.remove("np")};
+  im.onerror=()=>document.body.classList.add("np");im.src=`bg${i}.jpg`}
+setPh(0);
 const go=id=>{const el=$("#"+id);document.querySelectorAll(".s").forEach(e=>e.classList.toggle("on",e===el));document.body.dataset.bg=el.dataset.bg;if(el.dataset.ph)setPh(+el.dataset.ph);scrollTo(0,0)};
 document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
 $("#a").innerHTML='<option value="">Choose your area</option>'+Object.keys(AREA).map(a=>`<option>${a}</option>`).join("");
