@@ -44,6 +44,8 @@ input,select{width:100%;padding:14px;border-radius:12px;border:2px solid var(--k
 .ctl{display:flex;gap:8px;margin-bottom:12px}.ctl .btn{flex:1;padding:10px;font-size:15px;margin:0}
 .scr{position:relative;margin:16px 0 12px}.scr .tk{margin:0}.scr canvas{position:absolute;left:0;top:0;width:100%;height:100%;border-radius:22px;touch-action:none;transition:opacity .6s}.scr canvas.gone{opacity:0;pointer-events:none}
 .cd{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center}.cd div{background:var(--y);border:2px solid #000;border-radius:12px;padding:10px 0;font-weight:900;font-size:26px;line-height:1}.cd small{display:block;font-weight:500;font-size:12px;margin-top:4px}
+.ph{position:fixed;left:0;top:0;width:100%;height:100%;z-index:-1;background-size:cover;background-position:center;opacity:0;transition:opacity .9s;pointer-events:none}
+.ph.on{opacity:.3}
 @media (min-width:760px){
 #welcome,#details,#talent,#photo,#sort,#print{max-width:640px;margin-left:auto;margin-right:auto}
 #q{max-width:820px;margin-left:auto;margin-right:auto}
@@ -61,17 +63,18 @@ input,select{width:100%;padding:14px;border-radius:12px;border:2px solid var(--k
 </style>
 </head>
 <body data-bg="y">
+<div class="ph" id="ph1"></div><div class="ph" id="ph2"></div>
 <main>
 <img class="logo" data-ic="logo" alt="Under25">
 
-<section class="s on" id="welcome" data-bg="y">
+<section class="s on" id="welcome" data-ph="0" data-bg="y">
 <h1>Which House will claim you?</h1>
 <p>The Under25 City Meetup is coming to Bangalore. Play this 2 minute game, get sorted into your House and unlock your personal invite.</p>
 <div class="row"><img data-ic="r2c4" alt=""><img class="sm" data-ic="r1c5" alt=""><img class="sm" data-ic="r4c3" alt=""></div>
 <button class="btn" data-go="details">Start the game</button>
 </section>
 
-<section class="s" id="details" data-bg="w">
+<section class="s" id="details" data-ph="3" data-bg="w">
 <div class="row"><img class="sm" data-ic="r1c2" alt=""></div>
 <h2>First, who are you?</h2>
 <label for="n">Your name</label><input id="n" autocomplete="name">
@@ -92,7 +95,7 @@ input,select{width:100%;padding:14px;border-radius:12px;border:2px solid var(--k
 <div id="qo"></div>
 </section>
 
-<section class="s" id="talent" data-bg="y">
+<section class="s" id="talent" data-ph="2" data-bg="y">
 <div class="row"><img data-ic="r4c3" alt=""></div>
 <h2>Got a talent?</h2>
 <p>Singing, dancing, rapping, playing an instrument or anything else. Student performers close the day with our jam session.</p>
@@ -105,7 +108,7 @@ input,select{width:100%;padding:14px;border-radius:12px;border:2px solid var(--k
 </div>
 </section>
 
-<section class="s" id="photo" data-bg="w">
+<section class="s" id="photo" data-ph="6" data-bg="w">
 <div class="row"><img class="sm" data-ic="r3c2" alt=""></div>
 <h2>Now, build your ID card</h2>
 <p>You get a personal ID card at the venue. Add a childhood photo and tell people what to ask you about.</p>
@@ -116,13 +119,13 @@ input,select{width:100%;padding:14px;border-radius:12px;border:2px solid var(--k
 <button class="btn" id="toSort">Sort me</button>
 </section>
 
-<section class="s" id="print" data-bg="w">
+<section class="s" id="print" data-ph="0" data-bg="w">
 <h2 id="pt">Printing your ID card...</h2>
 <canvas class="cv" id="cv1" width="900" height="1300"></canvas>
 <button class="btn" id="toPlay" hidden>Decorate your card</button>
 </section>
 
-<section class="s" id="play" data-bg="y">
+<section class="s" id="play" data-ph="1" data-bg="y">
 <h2>Decorate your card</h2>
 <p>Add stickers from the Under25 kit, drag them where you want, then share your card.</p>
 <canvas class="cv" id="cv2" width="900" height="1300"></canvas>
@@ -134,7 +137,7 @@ input,select{width:100%;padding:14px;border-radius:12px;border:2px solid var(--k
 <button class="btn alt" id="toInv">Continue to my invite</button>
 </section>
 
-<section class="s" id="sort" data-bg="w">
+<section class="s" id="sort" data-ph="4" data-bg="w">
 <div id="sg" style="text-align:center"><img class="wob" data-ic="r2c2" alt=""><h2>Sorting you...</h2></div>
 <div class="rv" id="rv" hidden>
 <p>You belong to</p>
@@ -144,7 +147,7 @@ input,select{width:100%;padding:14px;border-radius:12px;border:2px solid var(--k
 <button class="btn" id="open" hidden>Print my ID card</button>
 </section>
 
-<section class="s" id="invite" data-bg="y">
+<section class="s" id="invite" data-ph="6" data-bg="y">
 <h1 id="ih"></h1>
 <div class="scr" id="scr"><div class="tk" id="tk">
 <img data-ic="r1c3" alt="">
@@ -181,6 +184,7 @@ input,select{width:100%;padding:14px;border-radius:12px;border:2px solid var(--k
 </section>
 </main>
 
+<script src="photos.js"></script>
 <script src="icons.js"></script>
 <script>
 const IC=window.IC;
@@ -200,7 +204,10 @@ const LINE={sports:"Expect a room that turns every icebreaker into a competition
 const H={pump:{n:"Pumpkin Patch",b:"#fe5a00",f:"#000"},phan:{n:"Phantom Manor",b:"#4d298e",f:"#fff"},brew:{n:"Witch's Brew",b:"#065939",f:"#fff"},cat:{n:"Black Cat Club",b:"#ffd12e",f:"#000"}};
 const AREA={"Koramangala":"pump","HSR Layout":"pump","BTM Layout":"pump","Bellandur":"pump","Indiranagar":"phan","Domlur":"phan","Ulsoor":"phan","Whitefield":"phan","Marathahalli":"phan","Jayanagar":"brew","JP Nagar":"brew","Banashankari":"brew","Basavanagudi":"brew","Malleshwaram":"cat","Rajajinagar":"cat","Yeshwanthpur":"cat","Hebbal":"cat","Another area in Bangalore":"cat"};
 const S={tally:{},talent:""};let qi=0;
-const go=id=>{const el=$("#"+id);document.querySelectorAll(".s").forEach(e=>e.classList.toggle("on",e===el));document.body.dataset.bg=el.dataset.bg;scrollTo(0,0)};
+const PH=window.PH||[],QP=[1,2,5,4,0,6,3];let phc=0,phi=-1;
+function setPh(i){if(!PH.length||i===phi)return;phi=i;const a=$(phc?"#ph2":"#ph1"),b=$(phc?"#ph1":"#ph2");a.style.backgroundImage=`url(${PH[i]})`;a.classList.add("on");b.classList.remove("on");phc=1-phc}
+setPh(0);
+const go=id=>{const el=$("#"+id);document.querySelectorAll(".s").forEach(e=>e.classList.toggle("on",e===el));document.body.dataset.bg=el.dataset.bg;if(el.dataset.ph)setPh(+el.dataset.ph);scrollTo(0,0)};
 document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
 $("#a").innerHTML='<option value="">Choose your area</option>'+Object.keys(AREA).map(a=>`<option>${a}</option>`).join("");
 
@@ -212,7 +219,7 @@ $("#toQ").onclick=()=>{
   Object.assign(S,{name:v[0],email:v[1],phone:v[2],college:v[3],dob:v[4],area:v[5],house:AREA[v[5]],insta:"@"+ig,tally:{}});qi=0;showQ();
 };
 function showQ(){
-  go("q");const [q,o]=Q[qi];
+  go("q");setPh(QP[qi%QP.length]);const [q,o]=Q[qi];
   $("#qn").textContent=`Question ${qi+1} of ${Q.length}`;$("#qt").textContent=q;$("#qo").innerHTML="";
   o.forEach(([t,k])=>{const b=document.createElement("button");b.className="opt";b.textContent=t;
     b.onclick=()=>{S.tally[k]=(S.tally[k]||0)+1;++qi<Q.length?showQ():go("talent")};$("#qo").append(b)});
